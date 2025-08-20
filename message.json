@@ -1,0 +1,174 @@
+{
+  "templates": [
+    {
+      "id": "t1",
+      "text": "Choose one option below 👇",
+      "buttons": [
+        { "id": "earn_start", "text": "💰 Start Earning" },
+        { "id": "how_it_works", "text": "📊 How It Works" },
+        { "id": "contact_us", "text": "📞 Contact Us" },
+        { "id": "today_offer", "text": "🎁 Today’s Offer" }
+      ]
+    },
+    {
+      "id": "t2",
+      "text": "Payment & Withdrawals — what do you need?",
+      "buttons": [
+        { "id": "payment_methods", "text": "💳 Methods" },
+        { "id": "withdraw_rules", "text": "🏦 Withdraw Rules" },
+        { "id": "payment_proofs", "text": "🧾 Proofs" },
+        { "id": "support_team", "text": "🆘 Support" }
+      ]
+    },
+    {
+      "id": "t3",
+      "text": "Account & Profile settings:",
+      "buttons": [
+        { "id": "create_account", "text": "🆕 Create Account" },
+        { "id": "update_profile", "text": "✏️ Update Profile" },
+        { "id": "verify_steps", "text": "✅ Verify Steps" },
+        { "id": "security_tips", "text": "🔐 Security Tips" }
+      ]
+    },
+    {
+      "id": "t4",
+      "text": "Daily tasks & ads options:",
+      "buttons": [
+        { "id": "watch_ads", "text": "▶️ Watch Ads" },
+        { "id": "spin_task", "text": "🎡 Spin Task" },
+        { "id": "survey_task", "text": "📝 Survey Task" },
+        { "id": "invite_friends", "text": "👥 Invite Friends" }
+      ]
+    },
+    {
+      "id": "t5",
+      "text": "Training & Help:",
+      "buttons": [
+        { "id": "video_tutorials", "text": "🎬 Tutorials" },
+        { "id": "faq", "text": "❓ FAQ" },
+        { "id": "rules", "text": "📜 Rules" },
+        { "id": "live_help", "text": "🧑‍💻 Live Help" }
+      ]
+    },
+    {
+      "id": "t6",
+      "text": "Boost your earnings:",
+      "buttons": [
+        { "id": "premium_plan", "text": "⭐ Premium Plan" },
+        { "id": "combo_offers", "text": "📦 Combo Offers" },
+        { "id": "refer_bonus", "text": "🎉 Refer Bonus" },
+        { "id": "limited_deal", "text": "⏱️ Limited Deal" }
+      ]
+    },
+    {
+      "id": "t7",
+      "text": "Contact & Community:",
+      "buttons": [
+        { "id": "whatsapp_chat", "text": "💬 WhatsApp Chat" },
+        { "id": "community_join", "text": "👨‍👩‍👧‍👦 Join Community" },
+        { "id": "email_us", "text": "✉️ Email Us" },
+        { "id": "about_brand", "text": "ℹ️ About Us" }
+      ]
+    },
+    {
+      "id": "t8",
+      "text": "Proof & Transparency:",
+      "buttons": [
+        { "id": "daily_reports", "text": "📈 Daily Reports" },
+        { "id": "top_earners", "text": "🏆 Top Earners" },
+        { "id": "latest_winners", "text": "🥇 Winners" },
+        { "id": "terms_policy", "text": "📄 Terms/Policy" }
+      ]
+    },
+    {
+      "id": "t9",
+      "text": "Starter kit for new members:",
+      "buttons": [
+        { "id": "get_started", "text": "🚀 Get Started" },
+        { "id": "requirements", "text": "🧩 Requirements" },
+        { "id": "first_earning", "text": "💵 1st Earning" },
+        { "id": "troubleshoot", "text": "🛠️ Troubleshoot" }
+      ]
+    },
+    {
+      "id": "t10",
+      "text": "Marketing assets:",
+      "buttons": [
+        { "id": "promo_banners", "text": "🖼️ Banners" },
+        { "id": "captions", "text": "🗒️ Captions" },
+        { "id": "hashtags", "text": "🏷️ Hashtags" },
+        { "id": "short_links", "text": "🔗 Short Links" }
+      ]
+    },
+    {
+      "id": "t11",
+      "text": "Verification & KYC:",
+      "buttons": [
+        { "id": "kyc_docs", "text": "🗂️ Docs Needed" },
+        { "id": "kyc_submit", "text": "📤 Submit KYC" },
+        { "id": "kyc_status", "text": "🔎 Check Status" },
+        { "id": "kyc_help", "text": "🆘 KYC Help" }
+      ]
+    },
+    {
+      "id": "t12",
+      "text": "Need anything else?",
+      "buttons": [
+        { "id": "main_menu", "text": "🏠 Main Menu" },
+        { "id": "contact_admin", "text": "👨‍✈️ Contact Admin" },
+        { "id": "share_bot", "text": "🔁 Share Bot" },
+        { "id": "rate_us", "text": "⭐ Rate Us" }
+      ]
+    }
+  ],
+  "responses": {
+    "earn_start": "Great! I will send you today’s earning tasks shortly.",
+    "how_it_works": "Watch ads, complete small tasks, and withdraw to your wallet/bank. Simple!",
+    "contact_us": "You can contact admin here: wa.me/00000000000 (edit in messages.json).",
+    "today_offer": "Today’s offer: New members get a sign-up bonus after first task!",
+    "payment_methods": "We support JazzCash/Easypaisa/Bank (edit as you like).",
+    "withdraw_rules": "Minimum withdraw, fees and timing — customize in messages.json.",
+    "payment_proofs": "We post payment proofs in our community.",
+    "support_team": "Our support is available 10am–10pm PKT.",
+    "create_account": "To create an account, follow the steps I will share with you.",
+    "update_profile": "You can update your profile in the dashboard (link to be added).",
+    "verify_steps": "Account verification is 2-step. I’ll guide you when you’re ready.",
+    "security_tips": "Never share OTP or password with anyone.",
+    "watch_ads": "Open the ads page and start watching. Link to be added.",
+    "spin_task": "Spin task unlocks after day 3.",
+    "survey_task": "Survey tasks appear daily at 7pm.",
+    "invite_friends": "Invite and earn referral bonus on their activity.",
+    "video_tutorials": "Tutorials playlist link will be added by you.",
+    "faq": "Frequently asked questions — I will send the list.",
+    "rules": "Please read our rules to stay safe and compliant.",
+    "live_help": "Live help is available during working hours.",
+    "premium_plan": "Premium unlocks more ads & tasks. Customize text/pricing.",
+    "combo_offers": "Combo packs available occasionally.",
+    "refer_bonus": "Invite friends and get a bonus after their first withdraw.",
+    "limited_deal": "Limited time deal — ask for details.",
+    "whatsapp_chat": "Chat with admin: wa.me/00000000000",
+    "community_join": "Join the community: {{COMMUNITY_LINK}}",
+    "email_us": "Email us at example@email.com",
+    "about_brand": "We are Online Earning With Ads — helping members earn online.",
+    "daily_reports": "Daily reports are posted in community.",
+    "top_earners": "Top earners board updates every week.",
+    "latest_winners": "Congrats to our latest winners!",
+    "terms_policy": "Read our terms and policy here (add link).",
+    "get_started": "Get started guide will be sent next.",
+    "requirements": "You just need a phone, WhatsApp, and some time daily.",
+    "first_earning": "Most members complete their first earning on day 1.",
+    "troubleshoot": "If something breaks, send a screenshot to support.",
+    "promo_banners": "I’ll send you promo banners pack.",
+    "captions": "Use these captions for social posts (I’ll send).",
+    "hashtags": "Use relevant hashtags to reach audience.",
+    "short_links": "Create short links using any shortener you like.",
+    "kyc_docs": "You’ll need CNIC and selfie (or as per your rules).",
+    "kyc_submit": "KYC submit portal link will be added.",
+    "kyc_status": "I will check your KYC status when you share your number.",
+    "kyc_help": "KYC help available — just ask.",
+    "main_menu": "Opening main menu…",
+    "contact_admin": "Admin: wa.me/00000000000",
+    "share_bot": "Share this bot with friends!",
+    "rate_us": "Please rate us with a star ⭐"
+  }
+}
