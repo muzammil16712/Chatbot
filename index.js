@@ -1,152 +1,74 @@
-const {
-  default: makeWASocket,
-  useMultiFileAuthState,
-  DisconnectReason,
-  fetchLatestBaileysVersion
-} = require("@whiskeysockets/baileys");
-const Pino = require("pino");
-const qrcode = require("qrcode-terminal");
-const fs = require("fs");
-const path = require("path");
-const express = require("express");
-require("dotenv").config();
+const { default: makeWASocket, useMultiFileAuthState, makeInMemoryStore } = require("@whiskeysockets/baileys")
+const qrcode = require("qrcode-terminal")
+const fs = require("fs")
+const express = require("express")
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-app.get("/", (_req, res) => res.send("Online Earning With Ads bot is running ✅"));
-app.listen(PORT, () => console.log(`🌍 Web server on ${PORT}`));
-
-const CONFIG = {
-  BRAND_NAME: process.env.BRAND_NAME || "Online Earning With Ads",
-  OWNER_NAME: process.env.OWNER_NAME || "Online Earning With Ads",
-  COMMUNITY_LINK: process.env.COMMUNITY_LINK || "https://example.com/join",
-  WELCOME_TEXT: process.env.WELCOME_TEXT || "Welcome 🤗 to watch ads and earn now"
-};
-
-const TEMPLATES = JSON.parse(
-  fs.readFileSync(path.join(__dirname, "messages.json"), "utf8")
-);
-
-function renderButtons(buttons) {
-  return buttons.map((b) => ({
-    buttonId: b.id,
-    buttonText: { displayText: b.text },
-    type: 1
-  }));
+// Load messages
+let messages = {}
+try {
+  messages = JSON.parse(fs.readFileSync("messages.json", "utf8"))
+} catch (err) {
+  console.error("Error loading messages.json", err)
 }
 
-function mentionTag(name) {
-  if (!name) return "";
-  return `@${String(name).replace(/\s+/g, "_")}`;
-}
-
-async function sendTemplate(sock, jid, templateId) {
-  const all = TEMPLATES.templates || [];
-  const t = all.find((x) => x.id === templateId) || all[0];
-  if (!t) return;
-  await sock.sendMessage(jid, {
-    text: t.text,
-    buttons: renderButtons(t.buttons),
-    footer: CONFIG.BRAND_NAME,
-    headerType: 1
-  });
-}
+// Heroku keep-alive server
+const app = express()
+app.get("/", (req, res) => res.send("✅ Online Earning Bot is running"))
+app.listen(process.env.PORT || 3000, () => console.log("Server running..."))
 
 async function startBot() {
-  const { state, saveCreds } = await useMultiFileAuthState("auth");
-  const { version } = await fetchLatestBaileysVersion();
+  const { state, saveCreds } = await useMultiFileAuthState("auth_info")
+  const sock = makeWASocket({ auth: state })
 
-  const sock = makeWASocket({
-    version,
-    auth: state,
-    printQRInTerminal: true,
-    logger: Pino({ level: "silent" }),
-    browser: ["HerokuBot", "Chrome", "18.0"]
-  });
+  // Save login
+  sock.ev.on("creds.update", saveCreds)
 
-  sock.ev.on("creds.update", saveCreds);
+  // Show QR on console
+  sock.ev.on("connection.update", ({ connection, qr }) => {
+    if (qr) qrcode.generate(qr, { small: true })
+    if (connection === "open") console.log("✅ Bot is connected!")
+  })
 
-  sock.ev.on("connection.update", (update) => {
-    const { connection, lastDisconnect, qr } = update;
-    if (qr) qrcode.generate(qr, { small: true });
-    if (connection === "open") console.log("✅ WhatsApp connected.");
-    if (connection === "close") {
-      const shouldReconnect =
-        lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
-      if (shouldReconnect) startBot();
-    }
-  });
+  // Listen for messages
+  sock.ev.on("messages.upsert", async (m) => {
+    const msg = m.messages[0]
+    if (!msg.message || msg.key.fromMe) return
 
-  sock.ev.on("messages.upsert", async ({ messages }) => {
-    const msg = messages && messages[0];
-    if (!msg || !msg.message) return;
+    const from = msg.key.remoteJid
+    const text = msg.message.conversation || msg.message.extendedTextMessage?.text || ""
 
-    const jid = msg.key.remoteJid;
-    if (!jid || jid.endsWith("@g.us")) return; // ignore groups
+    // Personalized welcome
+    const welcome = `👋 ${msg.pushName}, welcome 🤗 to watch ads and earn now!\n\n❓ Have you joined our community?`
 
-    const pushName = msg.pushName || "";
-    const userTag = mentionTag(pushName || jid.split("@")[0]);
-
-    const selectedBtn =
-      msg.message?.buttonsResponseMessage?.selectedButtonId ||
-      msg.message?.templateButtonReplyMessage?.selectedId ||
-      null;
-
-    // Handle button clicks first
-    if (selectedBtn) {
-      if (selectedBtn === "btn_yes") {
-        await sock.sendMessage(jid, {
-          text:
-            "Thanks for joining 🙏 Kindly save my number and send screenshot please."
-        });
-        return;
-      }
-      if (selectedBtn === "btn_no") {
-        await sock.sendMessage(jid, {
-          text: `Join our community now 👇\n${CONFIG.COMMUNITY_LINK}`
-        });
-        return;
-      }
-      if (selectedBtn === "open_menu") {
-        await sendTemplate(sock, jid, "t1");
-        return;
-      }
-
-      // Template replies map
-      const map = TEMPLATES.responses || {};
-      if (map[selectedBtn]) {
-        const out = String(map[selectedBtn]).replace(
-          "{{COMMUNITY_LINK}}",
-          CONFIG.COMMUNITY_LINK
-        );
-        await sock.sendMessage(jid, { text: out });
-        if (selectedBtn === "main_menu") {
-          await sendTemplate(sock, jid, "t1");
-        }
-        return;
-      }
+    if (text.toLowerCase() in messages.greetings) {
+      await sock.sendMessage(from, { text: messages.greetings[text.toLowerCase()] })
+    } else {
+      // Send welcome with buttons
+      await sock.sendMessage(from, {
+        text: welcome,
+        buttons: [
+          { buttonId: "yes_joined", buttonText: { displayText: "✅ Yes" }, type: 1 },
+          { buttonId: "no_not_joined", buttonText: { displayText: "❌ No" }, type: 1 }
+        ],
+        headerType: 1
+      })
     }
 
-    // Any text/image/video -> default welcome with 4 buttons
-    const welcome = `*${CONFIG.BRAND_NAME}*\n${userTag} ${CONFIG.WELCOME_TEXT}\n\nKya apne hamari community join ki hai?`;
-    await sock.sendMessage(jid, {
-      text: welcome,
-      mentions: [jid],
-      buttons: [
-        { buttonId: "btn_yes", buttonText: { displayText: "✅ Yes" }, type: 1 },
-        { buttonId: "btn_no", buttonText: { displayText: "❌ No" }, type: 1 },
-        { buttonId: "open_menu", buttonText: { displayText: "🏠 Main Menu" }, type: 1 },
-        { buttonId: "contact_admin", buttonText: { displayText: "👨‍✈️ Contact Admin" }, type: 1 }
-      ],
-      footer: CONFIG.OWNER_NAME,
-      headerType: 1
-    });
-  });
+    // Button reply handling
+    sock.ev.on("messages.upsert", async (m) => {
+      const buttonMsg = m.messages[0]
+      if (!buttonMsg?.message?.buttonsResponseMessage) return
 
-  // keep-alive
-  setInterval(() => {
-    try { sock.sendPresenceUpdate("available"); } catch {}
-  }, 25000);
+      const btnId = buttonMsg.message.buttonsResponseMessage.selectedButtonId
+      const jid = buttonMsg.key.remoteJid
+
+      if (btnId === "yes_joined") {
+        await sock.sendMessage(jid, { text: "🎉 Thanks for joining! Kindly save my number and send screenshot please 🙏" })
+      } else if (btnId === "no_not_joined") {
+        await sock.sendMessage(jid, { text: "📢 Please join our community here: https://chat.whatsapp.com/YourCommunityLink" })
+      }
+    })
+  })
 }
 
-startBot();
+startBot()
